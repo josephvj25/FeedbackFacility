@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FF - TechM</title>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="star-rating.css" rel="stylesheet" />
+
+    <link href="bootstrap-select.css" rel="stylesheet" />
+    <script src="jquery.js"></script>
+    <script src="bootstrap.js"></script>
+    <script src="star-rating.js"></script>
+    <script src="bootstrap-select.js"></script>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+    <script type="text/javascript">
+        var geocoder;
+        function getLocation() {
+            geocoder = new google.maps.Geocoder();
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(successFunction, errorFunction);
+            }
+        }
+        //Get the latitude and the longitude;
+        function successFunction(position) {
+            var lat = position.coords.latitude;
+            var lng = position.coords.longitude;
+            codeLatLng(lat, lng)
+        }
+
+        function errorFunction() {
+            alert("Geocoder failed");
+        }
+
+        function codeLatLng(lat, lng) {
+            var latlon = lat + "," + lng;
+            var img_url = "https://maps.googleapis.com/maps/api/staticmap?center=" + latlon + "&zoom=14&size=400x300&sensor=false&key=AIzaSyBu-916DdpKAjTmJNIgngS6HL_kDIKU0aU";
+            document.getElementById("mapholder").innerHTML = '<img src="' + img_url + '" class="img-responsive"/>';
+            var latlng = new google.maps.LatLng(lat, lng);
+            geocoder.geocode({ 'latLng': latlng }, function (results, status) {
+                var msg;
+                if (status == google.maps.GeocoderStatus.OK) {
+
+                    //console.log(results)
+                    if (results[1]) {
+                        //formatted address
+                        msg = results[6].formatted_address;
+                    } else {
+                        msg = "No results found";
+                    }
+                } else {
+                    msg = "Geocoder failed due to: " + status;
+                }
+                document.getElementById("locplaceholder").innerHTML = msg;
+            });
+        }
+    </script>
+
+    <style>
+        /** {
+            border:1px #ccc dotted;
+        }*/
+        body {
+            padding: 10px;
+        }
+
+        .btn-xlarge {
+            padding: 18px 28px;
+            font-size: 60px;
+            line-height: normal;
+            -webkit-border-radius: 8px;
+            -moz-border-radius: 8px;
+            border-radius: 8px;
+        }
+    </style>
+
+</head>
+<body class="">
+    <div class="container-fluid">
+        <div class="row">
+            <img src="header_image_tm.png" class="img-responsive" />
+
+        </div>
+    </div>
+
+    <div class="container" id="first">
+
+        <form class="form-horizontal">
+            <fieldset>
+
+                <!-- Form Name -->
+                <legend>Login</legend>
+
+                <!-- Text input-->
+                <div class="form-group">
+                    <!-- <label class="col-sm-4 control-label" for="textinput">User ID</label>   -->
+                    <div class="col-md-4">
+                        <input id="textinput" name="textinput" type="text" placeholder="GID" class="form-control input-md" required="">
+                        <span class="help-block red">Enter your GID</span>
+                    </div>
+                </div>
+
+                <!-- Password input-->
+                <div class="form-group">
+                    <!-- <label class="col-sm-4 control-label" for="passwordinput">Password</label> -->
+                    <div class="col-md-4">
+                        <input id="passwordinput" name="passwordinput" type="password" placeholder="Password" class="form-control input-md" required="">
+                        <span class="help-block red-text">Enter your password</span>
+                    </div>
+                </div>
+
+                <!-- Button -->
+                <div class="form-group">
+
+                    <div class="col-md-4">
+                        <button id="btnLogin" name="singlebutton" class="btn btn-danger form-control">Login</button>
+                    </div>
+                </div>
+
+            </fieldset>
+        </form>
+
+    </div>
+    <div class="container" id="second">
+
+        <form class="form-horizontal">
+            <fieldset>
+
+                <!-- Form Name -->
+                <legend>Select The Location</legend>
+
+
+                <!-- Button -->
+                <div class="form-group">
+
+                    <div class="col-md-4">
+                        <button id="btnAutomatic" name="singlebutton" class="btn btn-default form-control" onclick="getLocation()">Automatic</button>
+                    </div>
+                </div>
+
+                <!-- Button -->
+                <div class="form-group">
+
+                    <div class="col-md-4">
+                        <button id="btnManual" name="singlebutton" class="btn btn-default form-control">Manual</button>
+                    </div>
+                </div>
+                <div class="form-group">
+
+                    <div class="col-md-4">
+                        <select class="selectpicker form-control" data-live-search="true" required="">
+                            <!--List of Locations want to be here-->
+                            <option disabled selected value> -- Locations -- </option>
+                            <option data-tokens="Bangalore ElectonicCity Bengaluru">Electronic City Phase 2, Bengaluru</option>
+                            <option data-tokens="Bangalore GoldenHill Bengaluru">GoldenHill, Bengaluru</option>
+                            <option data-tokens="Chennai Sholinganallur">Sholinganallur, Chennai</option>
+                        </select>
+
+                    </div>
+                </div>
+                <!-- Button -->
+                <div class="form-group">
+
+                    <div class="col-md-4">
+                        <button id="btnNextLoc" name="singlebutton" class="btn btn-danger form-control">Next</button>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+
+
+    </div>
+    <div class="container" id="autoLocation">
+        <form class="form-horizontal">
+            <fieldset>
+
+                <!-- Form Name -->
+                <legend>Select The Location</legend>
+                <div class="form-group">
+                    <p id="locplaceholder"></p>
+                    <div class="col-md-4" id="mapholder"></div>
+                </div>
+                <!-- Button -->
+                <div class="form-group">
+
+
+                    <div class="col-md-2">
+                        <button id="btnLocConfirm" name="singlebutton" class="btn btn-danger form-control">OK</button>
+                    </div>
+                    <div class="col-md-2">
+                        <button id="btnLocBack" name="singlebutton" class="btn btn-warning form-control">Back</button>
+                    </div>
+
+                </div>
+
+
+            </fieldset>
+        </form>
+    </div>
+    <div class="container" id="third">
+        <form class="form-horizontal">
+            <fieldset>
+
+                <!-- Form Name -->
+                <legend>Scan QR</legend>
+
+                <!-- Button -->
+                <div class="form-group text-center">
+
+                    <div class="col-md-4">
+                        <button id="btnQRCode" name="singlebutton" class="btn btn-xlarge btn-danger glyphicon glyphicon-qrcode "></button>
+                    </div>
+                </div>
+
+
+                <!-- Text input-->
+                <div class="form-group">
+
+                    <div class="col-md-4">
+                        <select class="selectpicker form-control" data-live-search="true" required="">
+                            <!--List of Locations want to be here-->
+                            <option disabled selected value> -- Building -- </option>
+                            <option data-tokens="Bangalore ElectonicCity Bengaluru">Electronic City Phase 2, Bengaluru</option>
+                            <option data-tokens="Bangalore GoldenHill Bengaluru">GoldenHill, Bengaluru</option>
+                            <option data-tokens="Chennai Sholinganallur">Sholinganallur, Chennai</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Text input-->
+                <div class="form-group">
+
+                    <div class="col-md-4">
+                        <select class="selectpicker form-control" data-live-search="true" required="">
+                            <!--List of Locations want to be here-->
+                            <option disabled selected value> -- Floor -- </option>
+                            <option data-tokens="Bangalore ElectonicCity Bengaluru">Electronic City Phase 2, Bengaluru</option>
+                            <option data-tokens="Bangalore GoldenHill Bengaluru">GoldenHill, Bengaluru</option>
+                            <option data-tokens="Chennai Sholinganallur">Sholinganallur, Chennai</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Text input-->
+                <div class="form-group">
+
+                    <div class="col-md-4">
+                        <select class="selectpicker form-control" data-live-search="true" required="">
+                            <!--List of Locations want to be here-->
+                            <option disabled selected value> -- Wing -- </option>
+                            <option data-tokens="Bangalore ElectonicCity Bengaluru">Electronic City Phase 2, Bengaluru</option>
+                            <option data-tokens="Bangalore GoldenHill Bengaluru">GoldenHill, Bengaluru</option>
+                            <option data-tokens="Chennai Sholinganallur">Sholinganallur, Chennai</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Text input-->
+                <div class="form-group">
+
+                    <div class="col-md-4">
+                        <select class="selectpicker form-control" data-live-search="true" required="">
+                            <!--List of Locations want to be here-->
+                            <option disabled selected value> -- Unit -- </option>
+                            <option data-tokens="Bangalore ElectonicCity Bengaluru">Electronic City Phase 2, Bengaluru</option>
+                            <option data-tokens="Bangalore GoldenHill Bengaluru">GoldenHill, Bengaluru</option>
+                            <option data-tokens="Chennai Sholinganallur">Sholinganallur, Chennai</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Button -->
+                <div class="form-group">
+
+                    <div class="col-md-4">
+                        <button id="btnNextQR" name="singlebutton" class="btn btn-danger form-control">Next</button>
+                    </div>
+                </div>
+
+            </fieldset>
+        </form>
+
+    </div>
+    <div class="container" id="four">
+
+        <form class="form-horizontal">
+            <fieldset>
+
+                <!-- Form Name -->
+                <legend>Select the type of feedback</legend>
+
+
+                <!-- Button -->
+                <div class="form-group">
+
+                    <div class="col-md-4">
+                        <button id="btnSuggetion" name="singlebutton" class="btn btn-danger form-control">Suggetion</button>
+                    </div>
+                </div>
+
+                <!-- Button -->
+                <div class="form-group">
+
+                    <div class="col-md-4">
+                        <button id="btnRating" name="singlebutton" class="btn btn-danger form-control">Rating</button>
+                    </div>
+                </div>
+
+            </fieldset>
+        </form>
+
+
+    </div>
+    <div class="container" id="five">
+        <form class="form-horizontal">
+            <fieldset>
+
+                <!-- Form Name -->
+                <legend>Enter Your Suggetion</legend>
+
+                <!-- Textarea -->
+                <div class="form-group">
+
+                    <div class="col-md-4">
+                        <textarea class="form-control" id="textarea" name="textarea" required=""></textarea>
+                    </div>
+                </div>
+
+                <!-- Button -->
+                <div class="form-group">
+
+                    <div class="col-md-4">
+                        <button id="btnSuggetionSubmit" name="singlebutton" class="btn btn-danger form-control">Submit</button>
+                    </div>
+                </div>
+
+            </fieldset>
+        </form>
+
+    </div>
+    <div class="container" id="six">
+        <form class="form-horizontal">
+            <fieldset>
+
+                <!-- Form Name -->
+                <legend>Enter Your Ratings</legend>
+
+                <!-- Textarea -->
+                <div class="form-group">
+
+                    <div class="col-md-4">
+                        <label for="input-1" class="control-label">Wash room arrangements</label>
+                        <input id="input-1" value="1" type="number" class="rating form-control" min="0" max="5" step="1" data-size="md" required="">
+
+                    </div>
+                </div>
+                <div class="form-group">
+
+                    <div class="col-md-4">
+                        <label for="input-2" class="control-label">Cafetteria arrangements</label>
+                        <input id="input-2" value="1" type="number" class="rating form-control" min="0" max="5" step="1" data-size="md" required="">
+                    </div>
+                </div>
+
+                <!-- Button -->
+                <div class="form-group">
+
+                    <div class="col-md-4">
+                        <button id="btnSuggetionSubmit" name="singlebutton" class="btn btn-danger form-control">Submit</button>
+                    </div>
+                </div>
+
+            </fieldset>
+        </form>
+
+    </div>
+    
+    <script>
+        //$('document').ready(function () {
+        //    $('.container').hide();
+        //    $('#first').show();
+        //});
+        $('#btnLogin').click(function () {
+            $('#first').hide();
+            $('#second').show();
+        });
+        $('#btnAutomatic').click(function () {
+            $('#second').hide();
+            $('#autoLocation').show();
+        });
+        $('#btnLocBack').click(function () {
+            $('#autoLocation').hide();
+            $('#second').show();
+        });
+        $('#btnLocConfirm').click(function () {
+            $('#autoLocation').hide();
+            $('#third').show();
+        });
+
+
+    </script>
+</body>
+
+</html>

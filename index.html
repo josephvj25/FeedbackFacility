@@ -71,6 +71,10 @@
             -moz-border-radius: 8px;
             border-radius: 8px;
         }
+
+        input[type="file"] {
+            display: none;
+        }
     </style>
 
 </head>
@@ -150,7 +154,7 @@
 
 
     </div>
-    
+
     <div class="container" id="autoLocation">
         <form class="form-horizontal">
             <fieldset>
@@ -202,8 +206,10 @@
                 <div class="form-group text-center">
 
                     <div class="col-md-4">
-                        <input type="file" accept="image/*;capture=camera">
-                        <button id="btnQRCode" name="singlebutton" class="btn btn-xlarge btn-danger glyphicon glyphicon-qrcode "></button>
+                        
+                        <label id="btnQRCode" name="singlebutton" class="btn btn-xlarge btn-danger glyphicon">
+                            <input id="getImage" type="file" accept="image/*;capture=camera" /><img id="QRShow" class="img-responsive" />
+                        </label>
                     </div>
                 </div>
 
@@ -373,6 +379,17 @@
     <script>
         $('document').ready(function () {
             $('.container').hide();
+            $('#btnQRCode').addClass('glyphicon-qrcode');
+            $('#QRShow').hide();
+            //$('input[type="file"]').change(function (e) {
+               
+            //    var fileName = e.target.files[0].name;
+            //    $('#showQR').The file "' + fileName + '" has been selected.');
+            //});
+            $('#getImage').change(function (event) {
+                var tmppath = URL.createObjectURL(event.target.files[0]);
+                $("#QRShow").fadeIn("fast").attr('src', tmppath);
+            });
             $('#first').show();
         });
         $('#btnLogin').click(function () {
@@ -385,14 +402,14 @@
             $('#second').hide();
             $('#manlocs').hide();
             $('#autoLocation').show();
-            
+
             return false;
         });
         $('#btnManual').click(function () {
             $('#second').hide();
             $('#autolocs').hide();
             $('#autoLocation').show();
-            
+
             return false;
         });
         $('#btnLocBack').click(function () {
@@ -410,7 +427,12 @@
         });
         $('#btnQRCode').click(function () {
             //camera code
-            return false;
+            $('#getImage').click();
+            $('#QRShow').show();
+            $('#btnQRCode').removeClass('glyphicon-qrcode');
+
+
+            //return false;
         });
 
         $('#btnNextQR').click(function () {

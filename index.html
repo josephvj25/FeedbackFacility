@@ -11,7 +11,7 @@
     <script src="bootstrap.js"></script>
     <script src="star-rating.js"></script>
     <script src="bootstrap-select.js"></script>
-    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=true&key=AIzaSyBHpzefGevuFkMMuYhJaB5H43ZLTaEZOVo"></script>
     <script type="text/javascript">
         var geocoder;
         function getLocation() {
@@ -28,12 +28,12 @@
         }
 
         function errorFunction() {
-            alert("Geocoder failed");
+            document.getElementById("locplaceholder").innerHTML = "Geocoder failed";
         }
 
         function codeLatLng(lat, lng) {
             var latlon = lat + "," + lng;
-            var img_url = "https://maps.googleapis.com/maps/api/staticmap?center=" + latlon + "&zoom=14&size=400x300&sensor=false&key=AIzaSyBu-916DdpKAjTmJNIgngS6HL_kDIKU0aU";
+            var img_url = "https://maps.googleapis.com/maps/api/staticmap?center=" + latlon + "&zoom=14&size=400x300&sensor=true&key=AIzaSyBu-916DdpKAjTmJNIgngS6HL_kDIKU0aU";
             document.getElementById("mapholder").innerHTML = '<img src="' + img_url + '" class="img-responsive"/>';
             var latlng = new google.maps.LatLng(lat, lng);
             geocoder.geocode({ 'latLng': latlng }, function (results, status) {
@@ -43,7 +43,7 @@
                     //console.log(results)
                     if (results[1]) {
                         //formatted address
-                        msg = results[6].formatted_address;
+                        msg = results[0].formatted_address;
                     } else {
                         msg = "No results found";
                     }
@@ -133,7 +133,7 @@
                 <div class="form-group">
 
                     <div class="col-md-4">
-                        <button id="btnAutomatic" name="singlebutton" class="btn btn-default form-control" onclick="getLocation()">Automatic</button>
+                        <button id="btnAutomatic" name="singlebutton" class="btn btn-default form-control">Automatic</button>
                     </div>
                 </div>
 
@@ -144,7 +144,20 @@
                         <button id="btnManual" name="singlebutton" class="btn btn-default form-control">Manual</button>
                     </div>
                 </div>
-                <div class="form-group">
+
+            </fieldset>
+        </form>
+
+
+    </div>
+    
+    <div class="container" id="autoLocation">
+        <form class="form-horizontal">
+            <fieldset>
+
+                <!-- Form Name -->
+                <legend>Select The Location</legend>
+                <div class="form-group" id="manlocs">
 
                     <div class="col-md-4">
                         <select class="selectpicker form-control" data-live-search="true" required="">
@@ -157,25 +170,7 @@
 
                     </div>
                 </div>
-                <!-- Button -->
-                <div class="form-group">
-
-                    <div class="col-md-4">
-                        <button id="btnNextLoc" name="singlebutton" class="btn btn-danger form-control">Next</button>
-                    </div>
-                </div>
-            </fieldset>
-        </form>
-
-
-    </div>
-    <div class="container" id="autoLocation">
-        <form class="form-horizontal">
-            <fieldset>
-
-                <!-- Form Name -->
-                <legend>Select The Location</legend>
-                <div class="form-group">
+                <div class="form-group" id="autolocs">
                     <p id="locplaceholder"></p>
                     <div class="col-md-4" id="mapholder"></div>
                 </div>
@@ -207,6 +202,7 @@
                 <div class="form-group text-center">
 
                     <div class="col-md-4">
+                        <input type="file" accept="image/*;capture=camera">
                         <button id="btnQRCode" name="singlebutton" class="btn btn-xlarge btn-danger glyphicon glyphicon-qrcode "></button>
                     </div>
                 </div>
@@ -293,7 +289,7 @@
                 <div class="form-group">
 
                     <div class="col-md-4">
-                        <button id="btnSuggetion" name="singlebutton" class="btn btn-danger form-control">Suggetion</button>
+                        <button id="btnSuggestion" name="singlebutton" class="btn btn-danger form-control">Suggestion</button>
                     </div>
                 </div>
 
@@ -373,31 +369,71 @@
         </form>
 
     </div>
-    
+
     <script>
-        //$('document').ready(function () {
-        //    $('.container').hide();
-        //    $('#first').show();
-        //});
+        $('document').ready(function () {
+            $('.container').hide();
+            $('#first').show();
+        });
         $('#btnLogin').click(function () {
             $('#first').hide();
             $('#second').show();
+            return false;
         });
         $('#btnAutomatic').click(function () {
+            getLocation();
             $('#second').hide();
+            $('#manlocs').hide();
             $('#autoLocation').show();
+            
+            return false;
+        });
+        $('#btnManual').click(function () {
+            $('#second').hide();
+            $('#autolocs').hide();
+            $('#autoLocation').show();
+            
+            return false;
         });
         $('#btnLocBack').click(function () {
             $('#autoLocation').hide();
             $('#second').show();
+            $('#autolocs').show();
+            $('#manlocs').show();
+            return false;
         });
         $('#btnLocConfirm').click(function () {
+
             $('#autoLocation').hide();
             $('#third').show();
+            return false;
+        });
+        $('#btnQRCode').click(function () {
+            //camera code
+            return false;
         });
 
+        $('#btnNextQR').click(function () {
 
+            $('#third').hide();
+            $('#four').show();
+            return false;
+        });
+
+        $('#btnSuggestion').click(function () {
+            $('#four').hide();
+            $('#five').show();
+            return false;
+        });
+
+        $('#btnRating').click(function () {
+            $('#four').hide();
+            $('#six').show();
+            return false;
+        });
     </script>
 </body>
+
+
 
 </html>
